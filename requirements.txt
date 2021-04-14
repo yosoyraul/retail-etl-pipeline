@@ -1,0 +1,5 @@
+# Requirements 
+pandas==1.2.3
+numpy==1.20.2
+mysql-connector-python==8.0.23
+psycopg2-binary==2.8.6

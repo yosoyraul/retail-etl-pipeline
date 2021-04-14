@@ -1,0 +1,5 @@
+__pycache__
+config.ini
+test_mysql.py
+test_psql.py
+venv
