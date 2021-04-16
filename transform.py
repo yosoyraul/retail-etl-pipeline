@@ -84,6 +84,6 @@ def orders_daily(orders,orderItems):
     result = reduce(lambda  left,right: pd.merge(left,right,on=['date_id'],
                                             how='outer'), dfs)
     result.reset_index(inplace=True)
-    return = result
+    return result
 
 

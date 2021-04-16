@@ -47,10 +47,8 @@ class MySQL_Reader:
             cursor = self.conn.cursor()
             cursor.execute(query)
 
-            # result_list = [row for row in iter_row(cursor, fetch_size)]
-            for row in iter_row(cursor, 10):
-                print(row)
-                
+            result_list = [row for row in iter_row(cursor, fetch_size)]
+
 
         except Error as e:
             print(e)
@@ -59,7 +57,7 @@ class MySQL_Reader:
             cursor.close()
             self.disconnect(self.conn)
         
-        # return result_list
+        return result_list
 
     def query_with_fetchone(self,query):
         try:
@@ -67,10 +65,9 @@ class MySQL_Reader:
             cursor.execute(query,)
 
             row = cursor.fetchone()
-            # result_list = []
+            result_list = []
             while row is not None:
-                # result_list.append(row)
-                print(row)
+                result_list.append(row)
                 row = cursor.fetchone()
 
         except Error as e:
@@ -79,7 +76,7 @@ class MySQL_Reader:
         finally:
             cursor.close()
 
-        # return result_list
+        return result_list
 
     def query_with_fetchall(self,query):
         try:
@@ -87,9 +84,6 @@ class MySQL_Reader:
             cursor.execute(query)
             rows = cursor.fetchall()
 
-            print('Total Row(s):', cursor.rowcount)
-            # for row in rows:
-            #     print(row)
             result_list = [row for row in rows]
 
 

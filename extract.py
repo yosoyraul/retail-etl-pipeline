@@ -1,68 +1,24 @@
 import pandas as pd
 
-def extract_orders(query_builder,reader,date):
-        query = query_builder.get_orders_by_date(date)
+def extract_like_filter(query_builder,reader,cols,tbl,filter,date):
+        fields = ','.join(cols)
+        query = query_builder.select_where_like(fields,tbl,filter,date)
         result = reader.query_with_fetchall(query)
-        orders = pd.DataFrame(result,columns=['order_id','order_date','order_status'])
-        return orders
+        df = pd.DataFrame(result,columns=cols)
+        return df
 
-def extract_order_items(query_builder,reader,date):
-        query = query_builder.get_order_items_by_order_id(date)
+def extract_in_filter(query_builder,reader,col,tbl1,filter1,date,cols,tbl2,filter2):
+        fields2 = ','.join(cols)
+        subquery =query_builder.select_where_like(col,tbl1,filter1,date)
+        query = query_builder.select_where_in(fields2,tbl2,filter2,subquery)
         result = reader.query_with_fetchall(query)
-        order_items = pd.DataFrame(result,columns=['order_item_order_id','order_item_product_id','order_item_subtotal'])
-        return order_items
+        df = pd.DataFrame(result,columns=cols)
+        return df
 
-def extract_customers(query_builder,reader):
-        query = query_builder.get_all_from_table("customers")
+def extract_select(query_builder,reader,cols,tbl):
+        fields = ','.join(cols)
+        query = query_builder.select(fields,tbl)
         result = reader.query_with_fetchall(query)
-        customers = pd.DataFrame(result,
-            columns=[
-                'customer_id',
-                'customer_fname',
-                'customer_lname',
-                'customer_email',
-                'customer_password',
-                'customer_street',
-                'customer_city',
-                'customer_state',
-                'customer_zipcode']
-                ) 
-        return customers
+        df = pd.DataFrame(result,columns= cols) 
+        return df
 
-def extract_products(query_builder,reader):
-        query = query_builder.get_all_from_table("products")
-        result = reader.query_with_fetchall(query)
-        products = pd.DataFrame(result,
-            columns=[
-                'product_id',
-                'product_category_id',
-                'product_name',
-                'product_description',
-                'product_price',
-                'product_image'
-            ]
-                ) 
-        return products
-
-def extract_categories(query_builder,reader):
-        query = query_builder.get_all_from_table("categories")
-        result = reader.query_with_fetchall(query)
-        categories = pd.DataFrame(result,
-            columns=[
-                'category_id',
-                'category_department_id'
-                'category_name',
-                                ]
-                )
-        return categories
-
-def extract_departments(query_builder,reader):
-        query = query_builder.get_all_from_table("departments")
-        result = reader.query_with_fetchall(query)
-        departments = pd.DataFrame(result,
-            columns=[
-                'department_id',
-                'department_name',
-                                ]
-                )
-        return departments   
