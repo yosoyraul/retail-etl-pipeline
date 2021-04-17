@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <queries> 
-    <query>
+    <source_query>
         <to_be_loaded>True</to_be_loaded>
         <source_columns>
             <column>product_id</column>
@@ -17,8 +17,8 @@
             </sub_columns>
             <subfilter_col>None</subfilter_col>   
         </subquery>
-    </query>
-    <query>
+    </source_query>
+    <source_query>
         <to_be_loaded>True</to_be_loaded>    
         <source_columns>
             <column>category_id</column>
@@ -34,8 +34,8 @@
             </sub_columns>
             <subfilter_col>None</subfilter_col>   
         </subquery>
-    </query>
-    <query>
+    </source_query>
+    <source_query>
         <to_be_loaded>True</to_be_loaded>
         <source_columns>
         <column>department_id</column>
@@ -50,8 +50,8 @@
             </sub_columns>
             <subfilter_col>None</subfilter_col>   
         </subquery>
-    </query>
-    <query>
+    </source_query>
+    <source_query>
         <to_be_loaded>True</to_be_loaded>    
         <source_columns>
             <column>customer_id</column>
@@ -73,8 +73,8 @@
             </sub_columns>
             <subfilter_col>None</subfilter_col>        
         </subquery>
-    </query>
-    <query>
+    </source_query>
+    <source_query>
         <to_be_loaded>True</to_be_loaded>
         <source_columns>
             <column>order_id</column>
@@ -90,8 +90,8 @@
             </sub_columns>
             <subfilter_col>None</subfilter_col>        
         </subquery>
-    </query>
-    <query>
+    </source_query>
+    <source_query>
         <to_be_loaded>True</to_be_loaded>
         <source_columns>
             <column>order_item_order_id</column>
@@ -107,5 +107,58 @@
             </sub_columns>
             <subfilter_col>order_date</subfilter_col>
         </subquery>
-    </query>
+    </source_query>
+    <target_query>
+        <table_name>products_revenue_daily_fact</table_name>
+        <target_columns>
+            <column>date_id</column>
+            <column>product_id</column>
+            <column>product_revenue</column>
+            <column>outstanding</column>
+            <column>batch_id</column>
+            <column>batch_date</column>
+        </target_columns>
+    </target_query>
+    <target_query>
+        <table_name>order_revenue_daily_fact</table_name>
+        <target_columns>
+            <column>date_id</column>
+            <column>revenue</column>
+            <column>total_order_count</column>
+            <column>revenue_order_count</column>
+            <column>canceled_order_count</column>
+            <column>batch_id</column>
+            <column>batch_date</column>
+        </target_columns>
+    </target_query>
+    <target_query>
+        <table_name>customers_dim</table_name>
+        <target_columns>
+            <column>customer_id</column>
+            <column>customer_fname</column>
+            <column>customer_lname</column>
+            <column>customer_email</column>
+            <column>customer_password</column>
+            <column>customer_street</column>
+            <column>customer_city</column>
+            <column>customer_state</column>
+            <column>customer_zipcode</column>
+            <column>batch_id</column>
+            <column>batch_date</column>
+        </target_columns>
+    </target_query>
+    <target_query>
+        <table_name>products_dim</table_name>
+        <target_columns>
+            <column>product_id</column>
+            <column>product_name</column>
+            <column>product_price</column>
+            <column>category_id</column>
+            <column>category_name</column>
+            <column>department_id</column>
+            <column>department_name</column>
+            <column>batch_id</column>
+            <column>batch_date</column>
+        </target_columns>
+    </target_query>
 </queries>

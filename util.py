@@ -4,7 +4,7 @@ import pandas as pd
 with open('query_parameters.xml') as fd:
     doc = xmltodict.parse(fd.read())
 
-query_params = [
+source_params = [
     (
         query['table_name'],
         query['source_columns']['column'],
@@ -14,6 +14,10 @@ query_params = [
         query['subquery']['subfilter_col'],
         query['to_be_loaded']
     ) 
-    for query in doc['queries']['query']
+    for query in doc['queries']['source_query']
     ]
-query_paramsDf = pd.DataFrame(query_params,columns=['tables','columns','filter_col','subtables','sub_columns','subfilter_col','to_be_loaded'])
+source_paramsDf = pd.DataFrame(source_params,columns=['tables','columns','filter_col','subtables','sub_columns','subfilter_col','to_be_loaded'])
+
+target_params = [(query['table_name'],query['target_columns']['column']) for query in doc['queries']['target_query']]
+target_paramsDf = pd.DataFrame(target_params,columns=['tables','columns'])
+print(target_paramsDf)

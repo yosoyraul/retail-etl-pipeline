@@ -86,4 +86,8 @@ def orders_daily(orders,orderItems):
     result.reset_index(inplace=True)
     return result
 
-
+def products_master(products,categories,departments):
+    join1Df = pd.merge(products,categories,left_on='product_category_id',right_on='category_id')
+    res = pd.merge(join1Df,departments,left_on='category_department_id',right_on='department_id')
+    res.rename(columns={'product_category_id':'category_id'},inplace=True)
+    return res

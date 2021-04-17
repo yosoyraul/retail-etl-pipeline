@@ -13,3 +13,7 @@ class Query_Builder:
     def select(self,cols,tbl):
         query = "SELECT {} FROM {}".format(cols,tbl)
         return query
+
+    def insert(self,cols,tbl):
+        query = "INSERT INTO {} {} VALUES(%s)".format(tbl,cols)
+        print(query)

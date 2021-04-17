@@ -1,33 +1,33 @@
-from mysql.connector import connect, Error
 from config import read_db_config
+from psycopg2 import connect,Error
 
-class MySQL_Reader:
+class PSQL_Writer:
 
     def __init__(self):
         self.conn = self.connect()
 
     def connect(self):
         try:
-            dbconfig = read_db_config(section='mysql')
-            conn = connect(**dbconfig,use_pure=True)
-            if conn.is_connected():
-                print('Connected to MySQL database')
+            dbconfig = read_db_config(section='postgresql')
+            conn = connect(**dbconfig)
+            if conn is not None:
+                print('Connected to PSQL database')
         except Error as e:
             print(e)
         return conn
 
     def test_connection(self):
         try:
-            if self.conn.is_connected():
-                print("Connected to MySQL database")
+            if self.conn is not None:
+                print("Connected to PSQL database")
         except Error as e:
             print(e)
         
     def disconnect(self):
         try:
-            if self.conn is not None and self.conn.is_connected():
+            if self.conn is not None:
                 self.conn.close()
-                print('Disconnected from MySQL database')
+                print('Disconnected from PSQL database')
         except Error as e:
             print(e)
 
