@@ -15,5 +15,5 @@ class Query_Builder:
         return query
 
     def insert(self,cols,tbl):
-        query = "INSERT INTO {} {} VALUES(%s)".format(tbl,cols)
+        query = "INSERT INTO {} ({}) VALUES(%s)".format(tbl,cols)
         print(query)

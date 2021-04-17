@@ -20,4 +20,3 @@ source_paramsDf = pd.DataFrame(source_params,columns=['tables','columns','filter
 
 target_params = [(query['table_name'],query['target_columns']['column']) for query in doc['queries']['target_query']]
 target_paramsDf = pd.DataFrame(target_params,columns=['tables','columns'])
-print(target_paramsDf)

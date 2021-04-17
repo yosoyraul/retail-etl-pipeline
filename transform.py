@@ -5,7 +5,7 @@ def get_product_revenue(df):
     is_complete = df['order_status']=='COMPLETE'
     is_closed = df['order_status']=='CLOSED'
     result = df[is_complete | is_closed]. \
-        groupby(by=['date_id','product_id']).agg({'order_item_subtotal':'sum'})
+        groupby(by=['date_id','product_id']).agg({'order_item_subtotal':'sum'}).round(2)
     result.rename(columns = {
         'order_item_subtotal':'product_revenue'
         },inplace=True)
@@ -16,7 +16,7 @@ def get_product_outstanding(df):
     is_pending_payment = df['order_status']=='PENDING_PAYMENT'
     is_processing = df['order_status']=='PROCESSING'
     result = df[is_pending | is_processing | is_pending_payment]. \
-        groupby(by=['date_id','product_id']).agg({'order_item_subtotal':'sum'})
+        groupby(by=['date_id','product_id']).agg({'order_item_subtotal':'sum'}).round(2)
     result.rename(columns={
         'order_item_subtotal':'outstanding_revenue'
     },inplace=True)
@@ -34,6 +34,8 @@ def products_daily(orders,orderItems):
     result['product_revenue']=result['product_revenue'].fillna(0.00)
     result['outstanding_revenue']=result['outstanding_revenue'].fillna(0.00)
     result.reset_index(inplace=True)
+    result['date_id'] = result['date_id'].apply(lambda x: x.strftime("%Y%m%d"))
+    result['batch_date'] = pd.to_datetime('now').replace(microsecond=0)
     return result
 
 def get_total_order_count(df):
@@ -65,7 +67,7 @@ def get_outstanding_order_count(df):
 def get_revenue(df):
     is_complete = df['order_status']=='COMPLETE'
     is_closed = df['order_status']=='CLOSED'  
-    result = df[is_complete | is_closed].groupby('date_id').agg({'order_item_subtotal':'sum'})
+    result = df[is_complete | is_closed].groupby('date_id').agg({'order_item_subtotal':'sum'}).round(2)
     result.rename(columns={'order_item_subtotal':'revenue'},inplace=True)
     return result
 
@@ -84,10 +86,21 @@ def orders_daily(orders,orderItems):
     result = reduce(lambda  left,right: pd.merge(left,right,on=['date_id'],
                                             how='outer'), dfs)
     result.reset_index(inplace=True)
+    result['date_id'] = result['date_id'].apply(lambda x: x.strftime("%Y%m%d"))
+    result['batch_date'] = pd.to_datetime('now').replace(microsecond=0)
     return result
 
 def products_master(products,categories,departments):
     join1Df = pd.merge(products,categories,left_on='product_category_id',right_on='category_id')
-    res = pd.merge(join1Df,departments,left_on='category_department_id',right_on='department_id')
-    res.rename(columns={'product_category_id':'category_id'},inplace=True)
-    return res
+    result = pd.merge(join1Df,departments,left_on='category_department_id',right_on='department_id')
+    result.rename(columns={'product_category_id':'category_id'},inplace=True)
+    result['batch_date'] = pd.to_datetime('now').replace(microsecond=0)
+    return result
+
+def customers_master(customers):
+    result = customers
+    result['batch_date'] = pd.to_datetime('now').replace(microsecond=0)
+    return result
+
+
+    

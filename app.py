@@ -3,24 +3,26 @@ from psql_writer import PSQL_Writer
 from query_builder import Query_Builder
 from argparse import ArgumentParser
 from util import source_paramsDf, target_paramsDf
+import load
 import logging
 import extract
 import transform
 
 def main(date,tbl):
     reader = MySQL_Reader()
+    writer = PSQL_Writer()
     query_builder = Query_Builder()
     is_to_be_loaded = source_paramsDf['to_be_loaded']=='True'   
     has_filter_col = source_paramsDf['filter_col']!='None'
     if date:
         has_subquery = source_paramsDf['subtables']!='None'
         orders_query = source_paramsDf[has_filter_col & ~has_subquery]
-        orderItems_query = query_paramsDf[has_filter_col & has_subquery]
+        orderItems_query = source_paramsDf[has_filter_col & has_subquery]
 
         for i,row in orders_query.iterrows():
             ordersDf = extract.extract_like_filter(query_builder,reader,row['columns'],row['tables'],row['filter_col'],date)
             
-        for i,row in orderItems.iterrows():
+        for i,row in orderItems_query.iterrows():
             orderItemsDf = extract.extract_in_filter(
                 query_builder,
                 reader,
@@ -34,25 +36,30 @@ def main(date,tbl):
                 )
         res = {}
         res['products_revenue_daily_fact'] = transform.products_daily(ordersDf,orderItemsDf)
-        res['orders_revenue_daily_fact'] = transform.orders_daily(orderDf,orderItemsDf)  
-    # writer = PSQL_Writer()
+        res['orders_revenue_daily_fact'] = transform.orders_daily(ordersDf,orderItemsDf)  
+        for i,row in target_paramsDf.iterrows():
+            if row['tables'] in res:
+                load.load(query_builder,writer,row['columns'],row['tables'],res[row['tables']])
+
     if tbl:
         dfs = {}
+        res = {}
         query_type3 = source_paramsDf[~has_filter_col]
         for i,row in query_type3.iterrows():
                 dfs[row['tables']] = extract.extract_select(query_builder,reader,row['columns'],row['tables'])
 
-        res['customers_dim'] = dfs['customers']
+        res['customers_dim'] = transform.customers_master(dfs['customers'])
 
         productsDf = dfs['products']
         categoriesDf = dfs['categories']
         departmentsDf = dfs['departments']
         
         res['products_dim'] = transform.products_master(productsDf,categoriesDf,departmentsDf)
-  
-    
+        for i,row in target_paramsDf.iterrows():
+            if row['tables'] in res:
+                load.load(query_builder,writer,row['columns'],row['tables'],res[row['tables']])
 
-    # writer.disconnect()
+    writer.disconnect()
     reader.disconnect()
     return 0
 

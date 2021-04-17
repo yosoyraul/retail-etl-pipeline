@@ -120,7 +120,7 @@
         </target_columns>
     </target_query>
     <target_query>
-        <table_name>order_revenue_daily_fact</table_name>
+        <table_name>orders_revenue_daily_fact</table_name>
         <target_columns>
             <column>date_id</column>
             <column>revenue</column>
