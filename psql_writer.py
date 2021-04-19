@@ -11,25 +11,25 @@ class PSQL_Writer:
             dbconfig = read_db_config(section='postgresql')
             conn = connect(**dbconfig)
             if conn is not None:
-                print('Connected to PSQL database')
+                logging.info('Connected to PSQL database')
         except Error as e:
-            print(e)
+            logging.error(e)
         return conn
 
     def test_connection(self):
         try:
             if self.conn is not None:
-                print("Connected to PSQL database")
+                logging.info("Connected to PSQL database")
         except Error as e:
-            print(e)
+            logging.error(e)
         
     def disconnect(self):
         try:
             if self.conn is not None:
                 self.conn.close()
-                print('Disconnected from PSQL database')
+                logging.info('Disconnected from PSQL database')
         except Error as e:
-            print(e)
+            logging.error(e)
 
     def query_executemany(self,query,lists):
         try:
@@ -38,7 +38,7 @@ class PSQL_Writer:
             self.conn.commit()
  
         except Error as e:
-            print(e)
+            logging.error(e)
             self.conn.rollback()
 
         finally:
@@ -50,7 +50,7 @@ class PSQL_Writer:
             cursor.copy_from(f,tbl,sep="\t",columns=cols)
             self.conn.commit()
         except Error as e:
-            print(e)
+            logging.error(e)
             self.conn.rollback()
         finally:
             cursor.close()

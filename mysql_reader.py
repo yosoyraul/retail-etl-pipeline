@@ -11,25 +11,25 @@ class MySQL_Reader:
             dbconfig = read_db_config(section='mysql')
             conn = connect(**dbconfig,use_pure=True)
             if conn.is_connected():
-                print('Connected to MySQL database')
+                logging.info('Connected to MySQL database')
         except Error as e:
-            print(e)
+            logging.error(e)
         return conn
 
     def test_connection(self):
         try:
             if self.conn.is_connected():
-                print("Connected to MySQL database")
+                logging.info("Connected to MySQL database")
         except Error as e:
-            print(e)
+            logging.error(e)
         
     def disconnect(self):
         try:
             if self.conn is not None and self.conn.is_connected():
                 self.conn.close()
-                print('Disconnected from MySQL database')
+                logging.info('Disconnected from MySQL database')
         except Error as e:
-            print(e)
+            logging.error(e)
 
 
     def iter_row(self,cursor, fetch_size):
@@ -51,7 +51,7 @@ class MySQL_Reader:
 
 
         except Error as e:
-            print(e)
+            logging.error(e)
 
         finally:
             cursor.close()
@@ -71,7 +71,7 @@ class MySQL_Reader:
                 row = cursor.fetchone()
 
         except Error as e:
-            print(e)
+            logging.error(e)
 
         finally:
             cursor.close()
@@ -88,7 +88,7 @@ class MySQL_Reader:
 
 
         except Error as e:
-            print(e)
+            logging.error(e)
 
         finally:
             cursor.close()
