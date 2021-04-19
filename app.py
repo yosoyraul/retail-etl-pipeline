@@ -39,7 +39,7 @@ def main(date,tbl):
         res['orders_revenue_daily_fact'] = transform.orders_daily(ordersDf,orderItemsDf)  
         for i,row in target_paramsDf.iterrows():
             if row['tables'] in res:
-                load.load(query_builder,writer,row['columns'],row['tables'],res[row['tables']])
+                load.load_insert(query_builder,writer,row['columns'],row['tables'],res[row['tables']])
 
     if tbl:
         dfs = {}
@@ -53,11 +53,10 @@ def main(date,tbl):
         productsDf = dfs['products']
         categoriesDf = dfs['categories']
         departmentsDf = dfs['departments']
-        
         res['products_dim'] = transform.products_master(productsDf,categoriesDf,departmentsDf)
         for i,row in target_paramsDf.iterrows():
             if row['tables'] in res:
-                load.load(query_builder,writer,row['columns'],row['tables'],res[row['tables']])
+                load.load_bulk(writer,row['columns'],row['tables'],res[row['tables']])
 
     writer.disconnect()
     reader.disconnect()

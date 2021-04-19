@@ -93,7 +93,7 @@ def orders_daily(orders,orderItems):
 def products_master(products,categories,departments):
     join1Df = pd.merge(products,categories,left_on='product_category_id',right_on='category_id')
     result = pd.merge(join1Df,departments,left_on='category_department_id',right_on='department_id')
-    result.rename(columns={'product_category_id':'category_id'},inplace=True)
+    result.drop(['product_category_id','category_department_id'],axis=1,inplace=True)
     result['batch_date'] = pd.to_datetime('now').replace(microsecond=0)
     return result
 

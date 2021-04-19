@@ -114,8 +114,7 @@
             <column>date_id</column>
             <column>product_id</column>
             <column>product_revenue</column>
-            <column>outstanding</column>
-            <column>batch_id</column>
+            <column>outstanding_revenue</column>
             <column>batch_date</column>
         </target_columns>
     </target_query>
@@ -127,7 +126,7 @@
             <column>total_order_count</column>
             <column>revenue_order_count</column>
             <column>canceled_order_count</column>
-            <column>batch_id</column>
+            <column>outstanding_order_count</column>
             <column>batch_date</column>
         </target_columns>
     </target_query>
@@ -143,7 +142,6 @@
             <column>customer_city</column>
             <column>customer_state</column>
             <column>customer_zipcode</column>
-            <column>batch_id</column>
             <column>batch_date</column>
         </target_columns>
     </target_query>
@@ -157,7 +155,6 @@
             <column>category_name</column>
             <column>department_id</column>
             <column>department_name</column>
-            <column>batch_id</column>
             <column>batch_date</column>
         </target_columns>
     </target_query>

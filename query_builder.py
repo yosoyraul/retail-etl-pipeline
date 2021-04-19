@@ -14,6 +14,6 @@ class Query_Builder:
         query = "SELECT {} FROM {}".format(cols,tbl)
         return query
 
-    def insert(self,cols,tbl):
-        query = "INSERT INTO {} ({}) VALUES(%s)".format(tbl,cols)
-        print(query)
+    def insert(self,vals,cols,tbl):
+        query = "INSERT INTO {}({}) VALUES({})".format(tbl,cols,vals)
+        return query

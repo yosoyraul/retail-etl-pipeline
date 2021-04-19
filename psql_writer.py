@@ -31,66 +31,26 @@ class PSQL_Writer:
         except Error as e:
             print(e)
 
-
-    def iter_row(self,cursor, fetch_size):
-        while True:
-            rows = cursor.fetchmany(fetch_size)
-            if not rows:
-                break
-            for row in rows:
-                yield row
-
-
-    def query_with_fetchmany(self,query,fetch_size=10):
-
+    def query_executemany(self,query,lists):
         try:
             cursor = self.conn.cursor()
-            cursor.execute(query)
-
-            result_list = [row for row in iter_row(cursor, fetch_size)]
-
-
+            cursor.executemany(query,lists)
+            self.conn.commit()
+ 
         except Error as e:
             print(e)
-
-        finally:
-            cursor.close()
-            self.disconnect(self.conn)
-        
-        return result_list
-
-    def query_with_fetchone(self,query):
-        try:
-            cursor = self.conn.cursor()
-            cursor.execute(query,)
-
-            row = cursor.fetchone()
-            result_list = []
-            while row is not None:
-                result_list.append(row)
-                row = cursor.fetchone()
-
-        except Error as e:
-            print(e)
+            self.conn.rollback()
 
         finally:
             cursor.close()
 
-        return result_list
-
-    def query_with_fetchall(self,query):
+    def copy_from_file(self,f,cols,tbl):
         try:
             cursor = self.conn.cursor()
-            cursor.execute(query)
-            rows = cursor.fetchall()
-
-            result_list = [row for row in rows]
-
-
+            cursor.copy_from(f,tbl,sep="\t",columns=cols)
+            self.conn.commit()
         except Error as e:
             print(e)
-
+            self.conn.rollback()
         finally:
             cursor.close()
-
-        return result_list
