@@ -9,10 +9,18 @@ import extract
 import transform
 
 def main(date,tbl):
-    logging.basicConfig(filename='retail-etl.log',level=logging.INFO,format='%(asctime)s [%(message)s]',datefmt='%m/%d/%Y %I:%M:$S %p')
-    reader = MySQL_Reader()
-    writer = PSQL_Writer()
-    query_builder = Query_Builder()
+    formatter = logging.Formatter('%(asctime)s [%(message)s]')
+    logger = logging.getLogger('retail-etl-info')
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(formatter)
+    fh = logging.FileHandler('retail-etl.log')
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+    reader = MySQL_Reader(logger)
+    writer = PSQL_Writer(logger)
+    query_builder = Query_Builder(logger)
     is_to_be_loaded = source_paramsDf['to_be_loaded']=='True'   
     has_filter_col = source_paramsDf['filter_col']!='None'
     if date:
@@ -25,7 +33,7 @@ def main(date,tbl):
             ordersDf = extract.extract_like_filter(query_builder,reader,row['columns'],row['tables'],row['filter_col'],date)
             
         for i,row in orderItems_query.iterrows():
-            logging.info(f"Reading data from {row['tables']}")
+            logger.info(f"Reading data from {row['tables']}")
             orderItemsDf = extract.extract_in_filter(
                 query_builder,
                 reader,
@@ -42,7 +50,7 @@ def main(date,tbl):
         res['orders_revenue_daily_fact'] = transform.orders_daily(ordersDf,orderItemsDf)  
         for i,row in target_paramsDf.iterrows():
             if row['tables'] in res:
-                logging.info(f"Writing data to {row['tables']}")
+                logger.info(f"Writing data to {row['tables']}")
                 load.load_insert(query_builder,writer,row['columns'],row['tables'],res[row['tables']])
 
     if tbl:
@@ -50,7 +58,7 @@ def main(date,tbl):
         res = {}
         query_type3 = source_paramsDf[~has_filter_col]
         for i,row in query_type3.iterrows():
-                logging.info(f"Reading data from {row['tables']}")
+                logger.info(f"Reading data from {row['tables']}")
                 dfs[row['tables']] = extract.extract_select(query_builder,reader,row['columns'],row['tables'])
 
         res['customers_dim'] = transform.customers_master(dfs['customers'])
@@ -61,7 +69,7 @@ def main(date,tbl):
         res['products_dim'] = transform.products_master(productsDf,categoriesDf,departmentsDf)
         for i,row in target_paramsDf.iterrows():
             if row['tables'] in res:
-                logging.info(f"Writing data to {row['tables']}")
+                logger.info(f"Writing data to {row['tables']}")
                 load.load_bulk(writer,row['columns'],row['tables'],res[row['tables']])
 
     writer.disconnect()

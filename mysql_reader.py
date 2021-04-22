@@ -3,33 +3,35 @@ from config import read_db_config
 
 class MySQL_Reader:
 
-    def __init__(self):
+    def __init__(self,logger):
+        self.logger = logger
         self.conn = self.connect()
+        
 
     def connect(self):
         try:
             dbconfig = read_db_config(section='mysql')
             conn = connect(**dbconfig,use_pure=True)
             if conn.is_connected():
-                logging.info('Connected to MySQL database')
+                self.logger.info('Connected to MySQL database')
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
         return conn
 
     def test_connection(self):
         try:
             if self.conn.is_connected():
-                logging.info("Connected to MySQL database")
+                self.logger.info("Connected to MySQL database")
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
         
     def disconnect(self):
         try:
             if self.conn is not None and self.conn.is_connected():
                 self.conn.close()
-                logging.info('Disconnected from MySQL database')
+                self.logger.info('Disconnected from MySQL database')
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
 
 
     def iter_row(self,cursor, fetch_size):
@@ -51,7 +53,7 @@ class MySQL_Reader:
 
 
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
 
         finally:
             cursor.close()
@@ -71,7 +73,7 @@ class MySQL_Reader:
                 row = cursor.fetchone()
 
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
 
         finally:
             cursor.close()
@@ -88,7 +90,7 @@ class MySQL_Reader:
 
 
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
 
         finally:
             cursor.close()

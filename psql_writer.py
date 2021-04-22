@@ -3,33 +3,36 @@ from psycopg2 import connect,Error
 
 class PSQL_Writer:
 
-    def __init__(self):
+    def __init__(self,logger):
+        self.logger = logger
         self.conn = self.connect()
+        
+
 
     def connect(self):
         try:
             dbconfig = read_db_config(section='postgresql')
             conn = connect(**dbconfig)
             if conn is not None:
-                logging.info('Connected to PSQL database')
+                self.logger.info('Connected to PSQL database')
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
         return conn
 
     def test_connection(self):
         try:
             if self.conn is not None:
-                logging.info("Connected to PSQL database")
+                self.logger.info("Connected to PSQL database")
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
         
     def disconnect(self):
         try:
             if self.conn is not None:
                 self.conn.close()
-                logging.info('Disconnected from PSQL database')
+                self.logger.info('Disconnected from PSQL database')
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
 
     def query_executemany(self,query,lists):
         try:
@@ -38,7 +41,7 @@ class PSQL_Writer:
             self.conn.commit()
  
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
             self.conn.rollback()
 
         finally:
@@ -50,7 +53,7 @@ class PSQL_Writer:
             cursor.copy_from(f,tbl,sep="\t",columns=cols)
             self.conn.commit()
         except Error as e:
-            logging.error(e)
+            self.logger.error(e)
             self.conn.rollback()
         finally:
             cursor.close()

@@ -1,0 +1,54 @@
+Connected to MySQL database
+Connected to PSQL database
+SELECT order_id,order_date,order_status FROM orders WHERE order_date LIKE CONCAT('2013-08-03','%')
+Reading data from order_items
+SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-03','%')
+SELECT order_item_order_id,order_item_product_id,order_item_subtotal FROM order_items WHERE order_item_order_id IN (SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-03','%'))
+Writing data to products_revenue_daily_fact
+INSERT INTO products_revenue_daily_fact(date_id,product_id,product_revenue,outstanding_revenue,batch_date) VALUES(%s,%s,%s,%s,%s)
+Writing data to orders_revenue_daily_fact
+INSERT INTO orders_revenue_daily_fact(date_id,revenue,total_order_count,revenue_order_count,canceled_order_count,outstanding_order_count,batch_date) VALUES(%s,%s,%s,%s,%s,%s,%s)
+Disconnected from PSQL database
+Disconnected from MySQL database
+Connected to MySQL database
+Connected to PSQL database
+SELECT order_id,order_date,order_status FROM orders WHERE order_date LIKE CONCAT('2013-08-03','%')
+Reading data from order_items
+SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-03','%')
+SELECT order_item_order_id,order_item_product_id,order_item_subtotal FROM order_items WHERE order_item_order_id IN (SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-03','%'))
+Writing data to products_revenue_daily_fact
+INSERT INTO products_revenue_daily_fact(date_id,product_id,product_revenue,outstanding_revenue,batch_date) VALUES(%s,%s,%s,%s,%s)
+duplicate key value violates unique constraint "products_revenue_daily_fact_pkey"
+DETAIL:  Key (date_id, product_id)=(20130803, 44) already exists.
+
+Writing data to orders_revenue_daily_fact
+INSERT INTO orders_revenue_daily_fact(date_id,revenue,total_order_count,revenue_order_count,canceled_order_count,outstanding_order_count,batch_date) VALUES(%s,%s,%s,%s,%s,%s,%s)
+duplicate key value violates unique constraint "orders_revenue_daily_fact_pkey"
+DETAIL:  Key (date_id)=(20130803) already exists.
+
+Disconnected from PSQL database
+Disconnected from MySQL database
+Connected to MySQL database
+Connected to PSQL database
+SELECT order_id,order_date,order_status FROM orders WHERE order_date LIKE CONCAT('2013-08-04','%')
+Reading data from order_items
+SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-04','%')
+SELECT order_item_order_id,order_item_product_id,order_item_subtotal FROM order_items WHERE order_item_order_id IN (SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-04','%'))
+Writing data to products_revenue_daily_fact
+INSERT INTO products_revenue_daily_fact(date_id,product_id,product_revenue,outstanding_revenue,batch_date) VALUES(%s,%s,%s,%s,%s)
+Writing data to orders_revenue_daily_fact
+INSERT INTO orders_revenue_daily_fact(date_id,revenue,total_order_count,revenue_order_count,canceled_order_count,outstanding_order_count,batch_date) VALUES(%s,%s,%s,%s,%s,%s,%s)
+Disconnected from PSQL database
+Disconnected from MySQL database
+Connected to MySQL database
+Connected to PSQL database
+SELECT order_id,order_date,order_status FROM orders WHERE order_date LIKE CONCAT('2013-08-05','%')
+Reading data from order_items
+SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-05','%')
+SELECT order_item_order_id,order_item_product_id,order_item_subtotal FROM order_items WHERE order_item_order_id IN (SELECT order_id FROM orders WHERE order_date LIKE CONCAT('2013-08-05','%'))
+Writing data to products_revenue_daily_fact
+INSERT INTO products_revenue_daily_fact(date_id,product_id,product_revenue,outstanding_revenue,batch_date) VALUES(%s,%s,%s,%s,%s)
+Writing data to orders_revenue_daily_fact
+INSERT INTO orders_revenue_daily_fact(date_id,revenue,total_order_count,revenue_order_count,canceled_order_count,outstanding_order_count,batch_date) VALUES(%s,%s,%s,%s,%s,%s,%s)
+Disconnected from PSQL database
+Disconnected from MySQL database
