@@ -1,23 +1,14 @@
-from mysql_reader import MySQL_Reader
-from psql_writer import PSQL_Writer
-from query_builder import Query_Builder
+from readers.mysql_reader import MySQL_Reader
+from writers.psql_writer import PSQL_Writer
+from queries.query_builder import Query_Builder
 from argparse import ArgumentParser
 from util import source_paramsDf, target_paramsDf
-import load
-import logging
-import extract
-import transform
+from logging.logger import logger
+import jobs.load
+import jobs.extract
+import jobs.transform
 
 def main(date,tbl):
-    formatter = logging.Formatter('%(asctime)s [%(message)s]')
-    logger = logging.getLogger('retail-etl-info')
-    logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    ch.setFormatter(formatter)
-    fh = logging.FileHandler('retail-etl.log')
-    logger.addHandler(fh)
-    logger.addHandler(ch)
     reader = MySQL_Reader(logger)
     writer = PSQL_Writer(logger)
     query_builder = Query_Builder(logger)
@@ -29,7 +20,7 @@ def main(date,tbl):
         orderItems_query = source_paramsDf[has_filter_col & has_subquery]
 
         for i,row in orders_query.iterrows():
-            logging.info(f"Reading data from {row['tables']}")
+            logger.info(f"Reading data from {row['tables']}")
             ordersDf = extract.extract_like_filter(query_builder,reader,row['columns'],row['tables'],row['filter_col'],date)
             
         for i,row in orderItems_query.iterrows():

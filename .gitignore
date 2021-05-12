@@ -3,3 +3,5 @@ config.ini
 test_mysql.py
 test_psql.py
 venv
+airflow
+retail_db
